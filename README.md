@@ -1,2 +1,75 @@
-# drive
-The drive project
+Drive
+=====
+[![Build Status](https://travis-ci.org/PileProject/drive.svg?branch=master)](https://travis-ci.org/PileProject/drive)
+
+Android applications provide children to learn programming
+with a visual programming and a real robot.
+
+### Available robots
+We currently support 1 robot and plan to support more robots.
+
+Released:
+- [LEGO MINDSTORMS NXT](https://shop.lego.com/en-US/LEGO-MINDSTORMS-NXT-2-0-8547)
+
+Developing:
+- [LEGO MINDSTORMS EV3](https://shop.lego.com/en-US/LEGO-MINDSTORMS-EV3-31313)
+- [PILE Original Robot](http://pileproject.com/en.html)
+
+
+## Build
+Linux & OS X:
+
+```sh
+./gradlew build
+```
+
+Windows:
+
+```sh
+./gradlew.bat build
+```
+
+
+## Run Test and Generate Javadoc
+Linux & OS X:
+
+```sh
+./gradlew test
+./gradlew javadoc
+```
+
+Windows:
+```sh
+./gradlew.bat test
+./gradlew.bat javadoc
+```
+
+Test reports will be generated in build/reports/tests (See index.html).
+Javadocs will be generated in build/docs/javadoc (See index.html).
+
+
+## Development setup
+Please fork this repository, make a new branch, modify it and send Pull Request.
+
+
+## Release History
+* 1.0.0
+    * First: Import our old library from bitbucket
+
+## Meta
+PILE Project – [@pileproject](https://twitter.com/pileproject) - dev@pileproject.com
+
+Distributed under the Apache License, Version 2.0. See ``LICENSE`` for more information.
+
+Let's discuss anything on our [Mailing List](https://groups.google.com/forum/#!forum/pile-dev)!
+
+[drive]: https://github.com/PileProject/drive
+[ICommunicator]: https://github.com/PileProject/drivecommand/blob/develop/src/main/java/com/pileproject/drivecommand/model/com/ICommunicator.java
+[BluetoothCommunicator]: https://github.com/PileProject/drive/blob/develop/app/src/main/java/com/pileproject/drive/comm/BluetoothCommunicator.java
+[MachineBase]: https://github.com/PileProject/drivecommand/blob/develop/src/main/java/com/pileproject/drivecommand/machine/MachineBase.java
+[NewMachine]: https://github.com/PileProject/drive/blob/develop/app/src/nxt/java/com/pileproject/drive/execution/NxtExecutionActivity.java#L38
+[NxtMachine]: https://github.com/PileProject/drivecommand/blob/develop/src/main/java/com/pileproject/drivecommand/model/nxt/NxtMachine.java
+[model]: https://github.com/PileProject/drivecommand/tree/develop/src/main/java/com/pileproject/drivecommand/model
+[ev3]: https://github.com/PileProject/drivecommand/tree/develop/src/main/java/com/pileproject/drivecommand/model/ev3
+[nxt]: https://github.com/PileProject/drivecommand/tree/develop/src/main/java/com/pileproject/drivecommand/model/nxt
+[pile]: https://github.com/PileProject/drivecommand/tree/develop/src/main/java/com/pileproject/drivecommand/model/pile
