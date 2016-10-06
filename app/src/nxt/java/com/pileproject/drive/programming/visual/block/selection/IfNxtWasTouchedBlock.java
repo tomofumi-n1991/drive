@@ -17,12 +17,12 @@
 package com.pileproject.drive.programming.visual.block.selection;
 
 import android.content.Context;
-import android.view.LayoutInflater;
 
 import com.pileproject.drive.R;
-import com.pileproject.drive.execution.ExecutionCondition;
 import com.pileproject.drive.execution.MachineController;
 import com.pileproject.drive.execution.NxtController;
+import com.pileproject.drive.preferences.MachinePreferences;
+import com.pileproject.drive.preferences.MachinePreferencesSchema;
 
 /**
  * This block check the touch sensor's value and check it was touched or not
@@ -31,15 +31,21 @@ import com.pileproject.drive.execution.NxtController;
  * @version 1.0 7-July-2013
  */
 public class IfNxtWasTouchedBlock extends SelectionBlock {
-
+    private final boolean mIsLejosFirmware;
     public IfNxtWasTouchedBlock(Context context) {
-        super(context);
-        LayoutInflater.from(context).inflate(R.layout.block_if_nxt_was_touched, this);
+        super(context, R.layout.block_if_nxt_was_touched);
+
+        String firmware = MachinePreferences.get(getContext()).getFirmware();
+        mIsLejosFirmware = firmware.equals(MachinePreferencesSchema.FIRMWARE.LEJOS);
     }
 
     @Override
-    public int action(MachineController controller, ExecutionCondition condition) {
-        condition.pushSelectionResult(((NxtController) controller).getTouchSensorValue());
-        return 0;
+    protected boolean evaluateCondition(MachineController controller) {
+        boolean wasTouched = ((NxtController) controller).getTouchSensorValue();
+
+        // leJOS returns the opposite value
+        if (mIsLejosFirmware) wasTouched = !wasTouched;
+
+        return wasTouched;
     }
 }
