@@ -54,7 +54,7 @@ Please fork this repository, make a new branch, modify it and send Pull Request.
 
 ## Release History
 * 1.0.0
-    * First: Import our old library from bitbucket
+    * First: Release NxtDrive.
 
 ## Meta
 PILE Project – [@pileproject](https://twitter.com/pileproject) - dev@pileproject.com
