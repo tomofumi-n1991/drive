@@ -2,18 +2,19 @@ Drive
 =====
 [![Build Status](https://travis-ci.org/PileProject/drive.svg?branch=master)](https://travis-ci.org/PileProject/drive)
 
-Android applications provide children to learn programming
-with a visual programming and a real robot.
+`Drive` provides children a gate to learn programming
+with visual programming and a real robot.
 
 ### Available robots
 We currently support 1 robot and plan to support more robots.
+We are going to implement them as [product flavors][ProductFlavor]: `nxt`, `ev3` and `pile`.
 
 Released:
-- [LEGO MINDSTORMS NXT](https://shop.lego.com/en-US/LEGO-MINDSTORMS-NXT-2-0-8547)
+- nxt: [LEGO MINDSTORMS NXT](https://shop.lego.com/en-US/LEGO-MINDSTORMS-NXT-2-0-8547)
 
 Developing:
-- [LEGO MINDSTORMS EV3](https://shop.lego.com/en-US/LEGO-MINDSTORMS-EV3-31313)
-- [PILE Original Robot](http://pileproject.com/en.html)
+- ev3: [LEGO MINDSTORMS EV3](https://shop.lego.com/en-US/LEGO-MINDSTORMS-EV3-31313)
+- pile: [PILE Original Robot](http://pileproject.com/en.html)
 
 
 ## Build
@@ -57,11 +58,12 @@ Please fork this repository, make a new branch, modify it and send Pull Request.
     * First: Release NxtDrive.
 
 ## Meta
-PILE Project – [@pileproject](https://twitter.com/pileproject) - dev@pileproject.com
-
-Distributed under the Apache License, Version 2.0. See ``LICENSE`` for more information.
+[PILE Project](http://pileproject.com/)
+– [@pileproject](https://twitter.com/pileproject) - dev@pileproject.com
 
 Let's discuss anything on our [Mailing List](https://groups.google.com/forum/#!forum/pile-dev)!
+
+Distributed under the Apache License, Version 2.0. See ``LICENSE`` for more information.
 
 [drive]: https://github.com/PileProject/drive
 [ICommunicator]: https://github.com/PileProject/drivecommand/blob/develop/src/main/java/com/pileproject/drivecommand/model/com/ICommunicator.java
@@ -73,3 +75,4 @@ Let's discuss anything on our [Mailing List](https://groups.google.com/forum/#!f
 [ev3]: https://github.com/PileProject/drivecommand/tree/develop/src/main/java/com/pileproject/drivecommand/model/ev3
 [nxt]: https://github.com/PileProject/drivecommand/tree/develop/src/main/java/com/pileproject/drivecommand/model/nxt
 [pile]: https://github.com/PileProject/drivecommand/tree/develop/src/main/java/com/pileproject/drivecommand/model/pile
+[ProductFlavor]: https://developer.android.com/studio/build/build-variants.html#product-flavors
