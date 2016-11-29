@@ -52,6 +52,13 @@ Javadocs will be generated in build/docs/javadoc (See index.html).
 ## Development setup
 Please fork this repository, make a new branch, modify it and send Pull Request.
 
+### checkLicenses
+This repository uses [a plugin](https://github.com/cookpad/license-tools-plugin) to maintain the copyright notice
+and it does `checkLicenses` task automatically in CI.
+If you add a new plugin and get an error in the process,
+please follow [the instruction of the plugin](https://github.com/cookpad/license-tools-plugin#how-to-use),
+and add a new `license.html` in your Pull Request.
+
 
 ## Release History
 * 1.0.0
