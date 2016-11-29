@@ -1,19 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
-  ~ Copyright (C) 2011-2015 PILE Project, Inc. <dev@pileproject.com>
-  ~
-  ~ Licensed under the Apache License, Version 2.0 (the "License");
-  ~ you may not use this file except in compliance with the License.
-  ~ You may obtain a copy of the License at
-  ~
-  ~      http://www.apache.org/licenses/LICENSE-2.0
-  ~
-  ~ Unless required by applicable law or agreed to in writing, software
-  ~ distributed under the License is distributed on an "AS IS" BASIS,
-  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-  ~ See the License for the specific language governing permissions and
-  ~ limitations under the License.
-  -->
+
+    Copyright (C) 2011-2016 PILE Project, Inc. <dev@pileproject.com>
+
+    Licensed under the Apache License, Version 2.0 (the "License");
+    you may not use this file except in compliance with the License.
+    You may obtain a copy of the License at
+
+         http://www.apache.org/licenses/LICENSE-2.0
+
+    Unless required by applicable law or agreed to in writing, software
+    distributed under the License is distributed on an "AS IS" BASIS,
+    WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+    See the License for the specific language governing permissions and
+    limitations under the License.
+
+-->
 <resources>
     <string name="app_name">NxtDrive</string>
 
@@ -51,11 +53,12 @@
     <string name="textOnBlocks.ifNxtWasTouched">タッチされた</string>
     <string name="textOnBlocks.ifThereWasALargeSound">おおきなおとがした</string>
 
-    <string name="sensors.touch">タッチセンサ</string>
-    <string name="sensors.light">ライトセンサ</string>
-    <string name="sensors.sound">サウンドセンサ</string>
-    <string name="motors.left">左モータ</string>
-    <string name="motors.right">右モータ</string>
+    <string name="sensors.touch">タッチ</string>
+    <string name="sensors.light">光</string>
+    <string name="sensors.sound">音</string>
+
+    <string name="motors.left">左</string>
+    <string name="motors.right">右</string>
 
     <string name="setting.portConnection">ポート設定</string>
     <string name="setting.portConnection.sensors">センサ</string>

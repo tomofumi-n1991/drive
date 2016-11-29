@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2011-2015 PILE Project, Inc. <dev@pileproject.com>
+/**
+ * Copyright (C) 2011-2016 PILE Project, Inc. <dev@pileproject.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.pileproject.drive.comm;
 
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
+import android.support.annotation.NonNull;
 
 import com.pileproject.drivecommand.model.com.ICommunicator;
 
@@ -39,31 +39,30 @@ public class BluetoothCommunicator implements ICommunicator {
     private OutputStream mOutputStream;
     private InputStream mInputStream;
 
-    public BluetoothCommunicator(BluetoothDevice device) {
+    public BluetoothCommunicator(@NonNull BluetoothDevice device) throws NullPointerException {
+        if (device == null) {
+            throw new NullPointerException("Device should not be null");
+        }
         mDevice = device;
     }
 
     @Override
     public void open() throws IOException {
-        if (mDevice == null) {
-            throw new IOException();
-        }
-
         // Orthodox method
         // This call may fail. It depends on the device.
         // Therefore, we do redundancy check with the below reflection method.
         mSocket = mDevice.createRfcommSocketToServiceRecord(SPP_UUID);
-
         try {
             mSocket.connect();
         } catch (IOException firstIOException) {
-            Log.d("Failed to connect by orthodox method");
+            Log.d("Failed to connect with an orthodox method");
             try {
                 // Redundancy check
                 Method method = mDevice.getClass().getMethod("createRfcommSocket", int.class);
                 mSocket = (BluetoothSocket) method.invoke(mDevice, 1);
                 mSocket.connect();
             } catch (IOException secondIOException) {
+                Log.d("Failed to connect with a redundancy method");
                 // Unable to connect; close the socket and get out
                 try {
                     mSocket.close();
@@ -100,13 +99,7 @@ public class BluetoothCommunicator implements ICommunicator {
         try {
             mOutputStream.write(request);
         } catch (IOException e) {
-            Log.e("Write failed.", e);
             throw new RuntimeException(e);
-        }
-
-        Log.d("Write");
-        for (int i = 0; i < request.length; i++) {
-            Log.d("[" + i + "]" + request[i]);
         }
     }
 
@@ -118,16 +111,12 @@ public class BluetoothCommunicator implements ICommunicator {
         try {
             numBytes = mInputStream.read(buffer);
         } catch (IOException e) {
-            Log.e("Read failed.", e);
             throw new RuntimeException(e);
         }
+
         byte[] result = new byte[numBytes];
         System.arraycopy(buffer, 0, result, 0, numBytes);
 
-        Log.d("Read ");
-        for (int i = 0; i < result.length; i++) {
-            Log.d("[" + i + "]" + result[i]);
-        }
         return result;
     }
 }

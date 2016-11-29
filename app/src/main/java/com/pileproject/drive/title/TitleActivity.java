@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2011-2015 PILE Project, Inc. <dev@pileproject.com>
+/**
+ * Copyright (C) 2011-2016 PILE Project, Inc. <dev@pileproject.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,22 +13,22 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.pileproject.drive.title;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 
 import com.pileproject.drive.R;
+import com.pileproject.drive.programming.visual.activity.ProgrammingActivity;
+import com.pileproject.drive.setting.SettingActivity;
 
 /**
  * The base class of title pages.
  * Users can move to programming page or preference page.
  */
-public abstract class TitleActivityBase extends AppCompatActivity {
+public class TitleActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,7 +38,7 @@ public abstract class TitleActivityBase extends AppCompatActivity {
         findViewById(R.id.title_startButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(getIntentToProgrammingPage());
+                startActivity(ProgrammingActivity.createIntent(getApplicationContext()));
             }
         });
 
@@ -46,7 +46,7 @@ public abstract class TitleActivityBase extends AppCompatActivity {
         findViewById(R.id.title_settingButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(getIntentToSettingPage());
+                startActivity(SettingActivity.createIntent(getApplicationContext()));
             }
         });
 
@@ -59,14 +59,4 @@ public abstract class TitleActivityBase extends AppCompatActivity {
         toolbar.setTitle(R.string.app_name);
         setSupportActionBar(toolbar);
     }
-
-    /**
-     * A method to get an intent to programming page.
-     */
-    protected abstract Intent getIntentToProgrammingPage();
-
-    /**
-     * A method to get an intent to preference page.
-     */
-    protected abstract Intent getIntentToSettingPage();
 }

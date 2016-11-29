@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2011-2015 PILE Project, Inc. <dev@pileproject.com>
+/**
+ * Copyright (C) 2011-2016 PILE Project, Inc. <dev@pileproject.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,7 +13,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.pileproject.drive.util.fragment;
 
 import android.app.Dialog;
@@ -23,6 +22,7 @@ import android.os.Bundle;
 import android.support.annotation.StringRes;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.text.TextUtils;
 
 /**
@@ -50,7 +50,10 @@ public class ProgressDialogFragment extends DialogFragment {
      */
     public static void showDialog(FragmentManager manager, String title, String message, String tag) {
         ProgressDialogFragment f = newInstance(title, message);
-        f.show(manager, tag);
+
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.add(f, tag);
+        transaction.commitAllowingStateLoss();
     }
 
     /**

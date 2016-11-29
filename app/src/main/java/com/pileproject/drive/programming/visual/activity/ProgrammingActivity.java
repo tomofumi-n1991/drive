@@ -1,5 +1,5 @@
-/*
- * Copyright (C) 2011-2015 PILE Project, Inc. <dev@pileproject.com>
+/**
+ * Copyright (C) 2011-2016 PILE Project, Inc. <dev@pileproject.com>
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.pileproject.drive.programming.visual.activity;
 
 import android.app.Activity;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
@@ -27,16 +27,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.EditText;
 
 import com.pileproject.drive.R;
+import com.pileproject.drive.execution.ExecutionActivity;
 import com.pileproject.drive.preferences.CommonPreferences;
 import com.pileproject.drive.preferences.MachinePreferences;
 import com.pileproject.drive.programming.visual.block.BlockBase;
+import com.pileproject.drive.programming.visual.block.BlockCategory;
 import com.pileproject.drive.programming.visual.block.BlockFactory;
 import com.pileproject.drive.programming.visual.layout.BlockSpaceLayout;
 import com.pileproject.drive.programming.visual.layout.ProgrammingSpaceManager;
+import com.pileproject.drive.setting.SettingActivity;
 import com.pileproject.drive.util.development.DeployUtils;
 import com.pileproject.drive.util.fragment.AlertDialogFragment;
 
@@ -49,7 +51,8 @@ import java.util.List;
  * @author <a href="mailto:tatsuyaw0c@gmail.com">Tatsuya Iwanari</a>
  * @version 1.0 18-June-2013
  */
-public abstract class ProgrammingActivityBase extends AppCompatActivity implements AlertDialogFragment.EventListener {
+public class ProgrammingActivity extends AppCompatActivity implements AlertDialogFragment.EventListener {
+
     private static final int DIALOG_REQUEST_CODE_DID_NOT_SELECT_DEVICE = 10000;
     private static final int DIALOG_REQUEST_CODE_DELETE_ALL_BLOCK      = 20000;
     private static final int DIALOG_REQUEST_CODE_PROGRAM_LIST          = 30000;
@@ -60,36 +63,32 @@ public abstract class ProgrammingActivityBase extends AppCompatActivity implemen
     private static final int ACTIVITY_RESULT_ADD_BLOCK       = 1;
     private static final int ACTIVITY_RESULT_EXECUTE_PROGRAM = 2;
 
-    private final int NKINDS = 3;
-    private List<Button> mAddBlockButtons;
-    private Button mExecButton;
     private ProgrammingSpaceManager mSpaceManager;
-    private boolean mIsConnected = false;
+
+    /**
+     * Returns an intent for invoking {@link ProgrammingActivity}.
+     *
+     * @param context context to be passed to the constructor of {@link Intent}.
+     * @return intent
+     */
+    public static Intent createIntent(Context context) {
+        return new Intent(context, ProgrammingActivity.class);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_programming);
 
-        setupToolbar();
+        setUpToolbar();
 
-        findViews();
+        setUpBlockButtons();
+
+        mSpaceManager = new ProgrammingSpaceManager(this, (BlockSpaceLayout) findViewById(R.id.programming_placingBlockSpaceLayout));
 
         mSpaceManager.loadExecutionProgram();
 
-        // Set OnClickListeners to buttons that add blocks
-        for (int i = 0; i < NKINDS; i++) {
-            mAddBlockButtons.get(i).setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Intent intent = getIntentToBlockList();
-                    intent.putExtra(getString(R.string.key_block_category), mAddBlockButtons.indexOf(v));
-                    startActivityForResult(intent, ACTIVITY_RESULT_ADD_BLOCK);
-                }
-            });
-        }
-
-        mExecButton.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.programming_execButton).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 moveToExecutionActivity();
@@ -97,31 +96,14 @@ public abstract class ProgrammingActivityBase extends AppCompatActivity implemen
         });
     }
 
-    protected abstract Intent getIntentToBlockList();
-
-    protected abstract Intent getIntentToDeviceList();
-
-    protected abstract Intent getIntentToExecute();
-
-    private void findViews() {
-        mSpaceManager
-                = new ProgrammingSpaceManager(this,
-                                              (BlockSpaceLayout) findViewById(R.id.programming_placingBlockSpaceLayout));
-        mAddBlockButtons = new ArrayList<>(NKINDS);
-        mAddBlockButtons.add((Button) findViewById(R.id.programming_sequenceButton));
-        mAddBlockButtons.add((Button) findViewById(R.id.programming_repetitionButton));
-        mAddBlockButtons.add((Button) findViewById(R.id.programming_selectionButton));
-        mExecButton = (Button) findViewById(R.id.programming_execButton);
-    }
-
     private void moveToExecutionActivity() {
         mSpaceManager.saveExecutionProgram();
+
+        // TODO: remove bluetooth-dependent code for WiFiCommunicator
         String address = MachinePreferences.get(getApplicationContext()).getMacAddress();
 
-        // TODO: this check does not work when dissolves paring
         if (address != null || DeployUtils.isOnEmulator()) {
-            Intent intent = getIntentToExecute();
-            intent.putExtra(getString(R.string.key_execution_isConnected), mIsConnected);
+            Intent intent = ExecutionActivity.createIntent(getApplicationContext());
             startActivityForResult(intent, ACTIVITY_RESULT_EXECUTE_PROGRAM);
             return ;
         }
@@ -142,24 +124,18 @@ public abstract class ProgrammingActivityBase extends AppCompatActivity implemen
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 
-        switch (requestCode) {
-            case ACTIVITY_RESULT_ADD_BLOCK:
-                if (resultCode == Activity.RESULT_OK) {
-                    // Get results
-                    int howToMake = data.getIntExtra(getString(R.string.key_block_how_to_make), BlockFactory.SEQUENCE);
-                    String blockName = data.getStringExtra(getString(R.string.key_block_block_name));
-                    List<BlockBase> blocks = BlockFactory.createBlocks(howToMake, blockName);
-                    mSpaceManager.addBlocks(blocks);
-                }
-                break;
-
-            case ACTIVITY_RESULT_EXECUTE_PROGRAM:
-                mIsConnected = !(data == null || !data.getBooleanExtra(getString(R.string.key_execution_isConnected), false));
-                break;
+        if (requestCode != ACTIVITY_RESULT_ADD_BLOCK || resultCode != Activity.RESULT_OK) {
+            return;
         }
+
+        @BlockCategory int category = data.getIntExtra(BlockListActivity.KEY_BLOCK_CATEGORY, BlockCategory.SEQUENCE);
+        String blockName = data.getStringExtra(BlockListActivity.KEY_BLOCK_NAME);
+
+        List<BlockBase> blocks = BlockFactory.createBlocks(category, blockName);
+        mSpaceManager.addBlocks(blocks);
     }
 
-    private void setupToolbar() {
+    private void setUpToolbar() {
         // get device address to show it on toolbar
         String deviceAddress = MachinePreferences.get(getApplicationContext()).getMacAddress();
         deviceAddress =
@@ -216,6 +192,33 @@ public abstract class ProgrammingActivityBase extends AppCompatActivity implemen
         });
     }
 
+    private void setUpBlockButtons() {
+
+        findViewById(R.id.programming_sequenceButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = BlockListActivity.createIntent(getApplicationContext(), BlockCategory.SEQUENCE);
+                startActivityForResult(intent, ACTIVITY_RESULT_ADD_BLOCK);
+            }
+        });
+
+        findViewById(R.id.programming_repetitionButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = BlockListActivity.createIntent(getApplicationContext(), BlockCategory.REPETITION);
+                startActivityForResult(intent, ACTIVITY_RESULT_ADD_BLOCK);
+            }
+        });
+
+        findViewById(R.id.programming_selectionButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = BlockListActivity.createIntent(getApplicationContext(), BlockCategory.SELECTION);
+                startActivityForResult(intent, ACTIVITY_RESULT_ADD_BLOCK);
+            }
+        });
+    }
+
     private void showSaveProgramDialog() {
         boolean isInSupervisorMode = CommonPreferences.get(getApplicationContext()).getSupervisorMode();
 
@@ -266,7 +269,7 @@ public abstract class ProgrammingActivityBase extends AppCompatActivity implemen
     public void onDialogEventHandled(int requestCode, DialogInterface dialog, int which, Bundle params) {
         switch (requestCode) {
             case DIALOG_REQUEST_CODE_DID_NOT_SELECT_DEVICE: {
-                startActivity(getIntentToDeviceList());
+                startActivity(SettingActivity.createIntent(getApplicationContext()));
                 break;
             }
 
@@ -328,7 +331,7 @@ public abstract class ProgrammingActivityBase extends AppCompatActivity implemen
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         String programName = mEditText.getText().toString();
-                        ((ProgrammingActivityBase) getActivity()).saveSampleProgram(programName);
+                        ((ProgrammingActivity) getActivity()).saveSampleProgram(programName);
                     }
             };
 
