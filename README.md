@@ -35,14 +35,16 @@ Windows:
 Linux & OS X:
 
 ```sh
-./gradlew test
-./gradlew javadoc
+./gradlew check
+./gradlew connectedCheck # do this after launching an emulator
+./gradlew generateNxtReleaseJavadoc
 ```
 
 Windows:
 ```sh
-./gradlew.bat test
-./gradlew.bat javadoc
+./gradlew.bat check
+./gradlew.bat connectedCheck # do this after launching an emulator
+./gradlew.bat generateNxtReleaseJavadoc
 ```
 
 Test reports will be generated in build/reports/tests (See index.html).
